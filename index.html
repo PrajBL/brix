@@ -13,7 +13,7 @@
     }
     h1 {
       text-align: center;
-      color: #0073e6;
+      color: #F55252;
     }
     form {
       background: #fff;
@@ -36,7 +36,7 @@
       border-radius: 4px;
     }
     input[type="submit"] {
-      background: #0073e6;
+      background: #F55252;
       color: #fff;
       font-weight: bold;
       cursor: pointer;
@@ -44,7 +44,17 @@
       margin-top: 20px;
     }
     input[type="submit"]:hover {
-      background: #005bb5;
+      background: #d84141;
+    }
+    .external-links {
+      text-align: center;
+      margin-top: 40px;
+      font-weight: bold;
+    }
+    .external-links a {
+      color: #F55252;
+      text-decoration: none;
+      margin: 0 10px;
     }
   </style>
 </head>
@@ -102,6 +112,11 @@
 
   </form>
 
+  <div class="external-links">
+    🔗 <a href="https://subsidy.brixline.com/" target="_blank">Subsidy Calculator</a> |
+    🌐 <a href="https://brixline.com" target="_blank">Brixline.com</a>
+  </div>
+
   <script>
     function checkMandatory() {
       var requiredFields = ['First_Name', 'Last_Name', 'Phone', 'Company', 'Description'];
@@ -112,3 +127,10 @@
           field.focus();
           return false;
         }
+      }
+      return true;
+    }
+  </script>
+
+</body>
+</html>
