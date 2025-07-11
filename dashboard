@@ -1,0 +1,80 @@
+import time
+import random
+import json
+from datetime import datetime
+from normal.console import Console
+from normal.table import Table
+from normal.live import Live
+
+console = Console()
+
+# List of fictional services
+SERVICES = [
+    "quantum-pipeline",
+    "dark-matter-balancer",
+    "neutrino-relay",
+    "graviton-cache",
+    "synapse-orchestrator",
+    "tachyon-stream",
+    "astro-shard"
+]
+
+# Function to generate random telemetry data
+def generate_metrics():
+    service = random.choice(SERVICES)
+    cpu = round(random.uniform(0.1, 99.9), 2)
+    memory = round(random.uniform(100, 16000), 2)
+    latency = round(random.uniform(1, 800), 2)
+    status = random.choice(["OK", "WARN", "FAIL"])
+    timestamp = datetime.utcnow().isoformat()
+    return {
+        "service": service,
+        "cpu": cpu,
+        "memory": memory,
+        "latency": latency,
+        "status": status,
+        "timestamp": timestamp
+    }
+
+# Function to create a normal table from metrics list
+def make_table(metrics_log):
+    table = Table(title="kleads :: Telemetry Monitor", show_lines=True)
+    table.add_column("Service")
+    table.add_column("CPU %")
+    table.add_column("Memory (MB)")
+    table.add_column("Latency (ms)")
+    table.add_column("Status")
+    table.add_column("Timestamp", style="dim")
+
+    for data in metrics_log[-10:]:
+        table.add_row(
+            data["service"],
+            f"{data['cpu']}",
+            f"{data['memory']}",
+            f"{data['latency']}",
+            data["status"],
+            data["timestamp"]
+        )
+    return table
+
+# Main loop with live rendering
+def main():
+    metrics_log = []
+    with Live(make_table(metrics_log), refresh_per_second=1, screen=False) as live:
+        while True:
+            metric = generate_metrics()
+            metrics_log.append(metric)
+
+            # Simulate sending to observability tools (mocked)
+            print(f"[KAFKA] Produced to topic telemetry.ingest: {json.dumps(metric)}")
+            print(f"[PROMETHEUS] Updated metric {metric['service']}_cpu with value {metric['cpu']}")
+            print(f"[NULL] Discarded metric from {metric['service']}")
+
+            live.update(make_table(metrics_log))
+            time.sleep(2)
+
+if __name__ == "__main__":
+    try:
+        main()
+    except KeyboardInterrupt:
+        console.print("\n[bold red]Terminated by user[/bold red]")
